@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Застрахуй Братуху{% endblock title %}
+{% block header %} {% include 'main/header.html' %} {% endblock header %}
+
+{% block body %}
+
+<div class="container">
+        <div class="page">
+            <div class="page__title">
+                Страхование
+            </div>
+            <div class="page__subtitle">
+                Выберите тип страхования
+            </div>
+            <div class="page__list-tests">
+                <ul class="list-tests">
+                    <li class="list-tests__item">
+                        <div class="list-tests__item__theme">
+                            <a href="/test-theme.html">ОСАГО</a>
+                        </div>
+                    </li>
+                    <li class="list-tests__item">
+                        <div class="list-tests__item__theme">
+                            <a href="#">КАСКО</a>
+                        </div>
+                    </li>
+                    <li class="list-tests__item">
+                        <div class="list-tests__item__theme">
+                            <a href="#">Жизнь и здоровье</a>
+                        </div>
+                    </li>
+                    <li class="list-tests__item">
+                        <div class="list-tests__item__theme">
+                            <a href="#">Недвижимость</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
+
