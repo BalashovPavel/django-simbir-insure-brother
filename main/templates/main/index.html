@@ -15,26 +15,13 @@
             </div>
             <div class="page__list-tests">
                 <ul class="list-tests">
+                    {% for category in categories %}
                     <li class="list-tests__item">
                         <div class="list-tests__item__theme">
-                            <a href="/test-theme.html">ОСАГО</a>
+                            <a href="{% url 'insurance' category.slug %}">{{ category.category_name }}</a>
                         </div>
                     </li>
-                    <li class="list-tests__item">
-                        <div class="list-tests__item__theme">
-                            <a href="#">КАСКО</a>
-                        </div>
-                    </li>
-                    <li class="list-tests__item">
-                        <div class="list-tests__item__theme">
-                            <a href="#">Жизнь и здоровье</a>
-                        </div>
-                    </li>
-                    <li class="list-tests__item">
-                        <div class="list-tests__item__theme">
-                            <a href="#">Недвижимость</a>
-                        </div>
-                    </li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>

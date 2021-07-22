@@ -1,0 +1,46 @@
+.profile-company{
+    margin: 20px;
+}
+
+.page__prof-nav{
+    width: 30%;
+    margin: 0;
+    padding: 0;
+    border-left: solid 2px var(--light-indigo);
+}
+
+.page__prof-nav li{
+    margin-left: .5em;
+    margin-bottom: .6em;
+}
+
+.page__prof-nav li a{
+    color: black;
+    font-size: 1.1rem;
+}
+
+.page__prof-nav li a:hover{
+    text-decoration: underline;
+}
+
+.page__info{
+    width: 70%;
+}
+
+.page__info__line{
+    display: flex;
+}
+
+.page__info__line-title{
+    width: 30%;
+    font-weight: 600;
+    margin-bottom: 1em;
+    font-size: 1.2rem;
+}
+
+.page__info__line-text{
+    width: 70%;
+}
+
+
+

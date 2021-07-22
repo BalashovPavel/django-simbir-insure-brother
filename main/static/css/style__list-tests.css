@@ -2,7 +2,7 @@
 
 .page {
     width: 90%;
-    max-width: 1200px;
+    max-width: 1300px;
     height: fit-content;
     min-height: 100vh;
     background-color: #ffffff;
@@ -27,6 +27,7 @@
 }
 
 .list-tests {
+    width: 100%;
     margin: 0;
     padding: 0;
     display: flex;
@@ -37,7 +38,7 @@
 
 .list-tests__item {
     font-size: 1.1rem;
-    width: 25%;
+    width: 33.3%;
     text-align: center;
     padding: .5em;
 }

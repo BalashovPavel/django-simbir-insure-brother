@@ -18,11 +18,11 @@ class Category(models.Model):
 
 class Insurance(models.Model):
     company = models.ForeignKey(CompanyProfile, on_delete=models.CASCADE, related_name='insurance',
-                                verbose_name='Компания')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Тип страхования')
+                                verbose_name='Компания', null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Тип страхования', null=True)
     description = models.CharField(max_length=150, verbose_name='Краткое описание')
     interest_rate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='Процентная ставка')
-    insurance_amount = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Страховая сумма')
+    insurance_amount = models.DecimalField(max_digits=8, decimal_places=0, verbose_name='Страховая сумма')
 
     def __str__(self):
         return self.category.category_name + "/" + self.company.company_name
