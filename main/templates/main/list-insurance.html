@@ -13,6 +13,15 @@
             <div class="page__subtitle">
                 Выберите одно из предложений
             </div>
+            <div class="page__subtitle">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
             <div class="page__list-tests">
                 <div class="page__filter">
                     <div class="page__subtitle">
@@ -33,7 +42,9 @@
                                     <div class="list-cart__item__right">{{ product.insurance_amount }} руб.</div>
                                 </div>
                                 <div>
-                                    <button class="list-cart__button" type="submit">Оставить заявку</button>
+                                    <a href="{% url 'create_client_request' product.category.slug product.id %}">
+                                        <button class="list-cart__button" type="submit">Оставить заявку</button>
+                                    </a>
                                 </div>
                                 <div><a class="js-open-modal" data-modal="{{ product.id }}">Подробнее</a></div>
                                 <div class="modal" data-modal="{{ product.id }}">
@@ -45,7 +56,9 @@
                                     <p class="modal__title">Дополнительная информация</p>
                                     <div>{{ product.description }}</div>
                                     <div>
-                                        <button class="list-cart__button" type="submit">Оставить заявку</button>
+                                        <a href="{% url 'create_client_request' product.category.slug product.id %}">
+                                            <button class="list-cart__button" type="submit">Оставить заявку</button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Застрахуй Братуху{% endblock title %}
+{% block header %} {% include 'main/header.html' %} {% endblock header %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="page">
+            <div class="page__title">
+                Создание заявки
+            </div>
+            <div class="page__subtitle">
+                Перед отправкой проверьте выбранное страхование
+            </div>
+            <div class="page__subtitle">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="page__list-tests">
+                <div class="page__info request1">
+                    <div class="page__info__line">
+                        <div class="page__info__line-title request">Компания:</div>
+                        <div class="page__info__line-text request">{{ insurance.company.company_name }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title request">Тип страхования:</div>
+                        <div class="page__info__line-text request">{{ insurance.category.category_name }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title request">Краткое описание:</div>
+                        <div class="page__info__line-text request">{{ insurance.description }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title request">Процентная ставка:</div>
+                        <div class="page__info__line-text request">{{ insurance.interest_rate }} %</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title request">Страховая сумма:</div>
+                        <div class="page__info__line-text request">{{ insurance.insurance_amount }} руб.</div>
+                    </div>
+                </div>
+                <div class="page__info request2">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button class="list-cart__button" type="submit">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock body %}
+
+

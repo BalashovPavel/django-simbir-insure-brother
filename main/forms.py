@@ -1,40 +1,18 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.forms import Select, Textarea, NumberInput, TextInput
+from django.forms import Select, Textarea, NumberInput, TextInput, EmailInput
 
-from main.models import Insurance, Category
+from main.models import Insurance, ClientRequest
 
 
-class AddInsuranceForm(forms.ModelForm):
+# Форма для создания клиентского запроса
+class CreateClientRequestForm(forms.ModelForm):
     class Meta:
-        model = Insurance
-        fields = ('category', 'description', 'interest_rate', 'insurance_amount')
+        model = ClientRequest
+        fields = ('last_name', 'first_name', 'patronymic', 'phone', 'email')
         widgets = {
-            'category': Select(),
-            'description': Textarea(attrs={'class': 'input', 'placeholder': 'Краткое описание'}),
-            'interest_rate': NumberInput(attrs={'class': 'input', 'placeholder': 'Процентная ставка'}),
-            'insurance_amount': NumberInput(attrs={'class': 'input', 'placeholder': 'Страховая сумма'})
+            'last_name': TextInput(attrs={'class': 'input'}),
+            'first_name': TextInput(attrs={'class': 'input'}),
+            'patronymic': TextInput(attrs={'class': 'input'}),
+            'phone': TextInput(attrs={'class': 'input'}),
+            'email': EmailInput(attrs={'class': 'input'}),
         }
-
-# class UserUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ('username', 'email', 'first_name', 'last_name')
-#         widgets = {
-#             'username': TextInput(attrs={'class': 'input', 'placeholder': 'Логин'}),
-#             'email': EmailInput(attrs={'class': 'input', 'placeholder': 'email'}),
-#             'first_name': TextInput(attrs={'class': 'input', 'placeholder': 'first_name'}),
-#             'last_name': TextInput(attrs={'class': 'input', 'placeholder': 'last_name'}),
-#         }
-#
-#
-# class ProfileUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = CompanyProfile
-#         fields = ('phone', 'city', 'address')
-#         widgets = {
-#             'phone': TextInput(attrs={'class': 'input', 'placeholder': 'Телефон'}),
-#             'city': TextInput(attrs={'class': 'input', 'placeholder': 'Город'}),
-#             'address': TextInput(attrs={'class': 'input', 'placeholder': 'Адрес'}),
-#         }

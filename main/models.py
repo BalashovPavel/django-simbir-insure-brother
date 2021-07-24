@@ -23,6 +23,8 @@ class Insurance(models.Model):
     description = models.CharField(max_length=150, verbose_name='Краткое описание')
     interest_rate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='Процентная ставка')
     insurance_amount = models.DecimalField(max_digits=8, decimal_places=0, verbose_name='Страховая сумма')
+    create_at = models.DateTimeField(auto_now_add=True)  # Создано в
+    update_at = models.DateTimeField(auto_now=True)  # Обнавлено в
 
     def __str__(self):
         return self.category.category_name + "/" + self.company.company_name
@@ -39,6 +41,7 @@ class ClientRequest(models.Model):
     patronymic = models.CharField(max_length=50, verbose_name='Отчество')
     phone = models.CharField(max_length=12, verbose_name='Номер телефона')
     email = models.EmailField(max_length=150, verbose_name='Email')
+    create_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name

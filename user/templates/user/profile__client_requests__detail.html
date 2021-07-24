@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Застрахуй Братуху{% endblock title %}
+{% block header %} {% include 'main/header.html' %} {% endblock header %}
+
+{% block body %}
+    <div class="container">
+        <div class="page">
+            <div class="page__title">
+                Личный кабинет / Детали заявки
+            </div>
+
+            <div class="page__list-tests profile-company">
+                <ul class="page__prof-nav">
+                    <li><a href="{% url 'company_info' %}">Информация о компании</a></li>
+                    <li><a href="{% url 'company_insurance' %}">Страховые услуги</a></li>
+                    <li><a href="{% url 'company_clients_requests' %}">Заявки клиентов</a></li>
+                </ul>
+                <div class="page__info">
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Страхование:</div>
+                        <div class="page__info__line-text">{{ detail.insurance.category.category_name }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Процентная ставка:</div>
+                        <div class="page__info__line-text">{{ detail.insurance.interest_rate }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Страховая сумма:</div>
+                        <div class="page__info__line-text">{{ detail.insurance.insurance_amount }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Описание:</div>
+                        <div class="page__info__line-text">{{ detail.insurance.description }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Фамилия:</div>
+                        <div class="page__info__line-text">{{ detail.last_name }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Имя:</div>
+                        <div class="page__info__line-text">{{ detail.first_name }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Отчество:</div>
+                        <div class="page__info__line-text">{{ detail.patronymic }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Номер телефона:</div>
+                        <div class="page__info__line-text">{{ detail.phone }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Email:</div>
+                        <div class="page__info__line-text">{{ detail.email }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Дата заявки:</div>
+                        <div class="page__info__line-text">{{ detail.create_at | date:"d-m-Y / H:i" }}</div>
+                    </div>
+                    <div>
+                        <a href="{% url 'company_clients_requests__delete' detail.id %}"><button class="list-cart__button" type="submit">Удалить заявку</button></a>
+                    </div>
+                </div>
+                <div class="overlay js-overlay-modal"></div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

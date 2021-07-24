@@ -126,3 +126,18 @@
     fill: #444;
     cursor: pointer;
 }
+
+.alert-success{
+    font-size: 1.1rem;
+    border: solid 2px green;
+    border-radius: .4em;
+    padding: .4em;
+    color: green;
+}
+
+.alert-warning{
+    font-size: 1.1rem;
+    border: solid 2px darkred;
+    border-radius: .4em;
+    color: darkred;
+}

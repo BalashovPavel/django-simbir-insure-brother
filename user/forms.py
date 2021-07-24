@@ -1,8 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.forms import TextInput, EmailInput, Select, Textarea, NumberInput
+
+from main.models import Insurance
+from user.models import CompanyProfile
 
 
+# Форма для регистрации нового аккаунта
 class SignUpForm(UserCreationForm):
     username = forms.CharField(max_length=30, label='Логин :')
     company_name = forms.CharField(max_length=150, label='Название компании :')
@@ -15,24 +20,37 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username', 'company_name', 'email', 'address', 'password1', 'password2',)
 
-# class UserUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ('username', 'email', 'first_name', 'last_name')
-#         widgets = {
-#             'username': TextInput(attrs={'class': 'input', 'placeholder': 'Логин'}),
-#             'email': EmailInput(attrs={'class': 'input', 'placeholder': 'email'}),
-#             'first_name': TextInput(attrs={'class': 'input', 'placeholder': 'first_name'}),
-#             'last_name': TextInput(attrs={'class': 'input', 'placeholder': 'last_name'}),
-#         }
-#
-#
-# class ProfileUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = CompanyProfile
-#         fields = ('phone', 'city', 'address')
-#         widgets = {
-#             'phone': TextInput(attrs={'class': 'input', 'placeholder': 'Телефон'}),
-#             'city': TextInput(attrs={'class': 'input', 'placeholder': 'Город'}),
-#             'address': TextInput(attrs={'class': 'input', 'placeholder': 'Адрес'}),
-#         }
+
+# Форма для изменения полей User
+class UserChangeForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+        widgets = {
+            'username': TextInput(attrs={'class': 'input', 'placeholder': 'Логин :'}),
+            'email': EmailInput(attrs={'class': 'input', 'placeholder': 'Email :'}),
+        }
+
+
+# Форма для изменения полей аккаунта
+class AccountChangeForm(forms.ModelForm):
+    class Meta:
+        model = CompanyProfile
+        fields = ('company_name', 'address')
+        widgets = {
+            'company_name': TextInput(attrs={'class': 'input', 'placeholder': 'Название компании :'}),
+            'address': TextInput(attrs={'class': 'input', 'placeholder': 'Юридический адрес :'}),
+        }
+
+
+# Форма для добавления страхового предложения
+class AddInsuranceForm(forms.ModelForm):
+    class Meta:
+        model = Insurance
+        fields = ('category', 'description', 'interest_rate', 'insurance_amount')
+        widgets = {
+            'category': Select(),
+            'description': Textarea(attrs={'class': 'input', 'placeholder': 'Краткое описание'}),
+            'interest_rate': NumberInput(attrs={'class': 'input', 'placeholder': 'Процентная ставка'}),
+            'insurance_amount': NumberInput(attrs={'class': 'input', 'placeholder': 'Страховая сумма'})
+        }

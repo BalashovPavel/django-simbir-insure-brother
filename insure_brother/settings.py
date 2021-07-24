@@ -80,7 +80,7 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
 
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'insure_brother_db',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         "HOST": os.environ.get("SQL_HOST", "localhost"),
