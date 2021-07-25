@@ -3,8 +3,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from django.views.generic import ListView
+from django.views.generic.base import View
 
-from main.forms import CreateClientRequestForm
+from main.forms import CreateClientRequestForm, FilterInsuranceMainForm
 from main.models import Category, Insurance, ClientRequest
 
 
@@ -16,18 +17,64 @@ class CategoryHome(ListView):
 
 
 # Список предложений для типа страхования
-class ListInsurance(ListView):
-    model = Insurance
-    template_name = 'main/list-insurance.html'
-    context_object_name = 'products'
+class ListInsurance(View):
 
-    def get_queryset(self):
-        return Insurance.objects.filter(category__slug=self.kwargs['slug'])
+    def get(self, request, *args, **kwargs):
+        products = Insurance.objects.filter(category__slug=self.kwargs['slug'])
+        category = Category.objects.get(slug=self.kwargs['slug'])
+        form = FilterInsuranceMainForm(self.request.GET)
+        if form.is_valid():
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(ListInsurance, self).get_context_data(**kwargs)
-        context['category'] = Category.objects.get(slug=self.kwargs['slug'])
-        return context
+            """
+            Фильтр по компаниям
+            """
+            company = form.cleaned_data.get('company')
+            if company:
+                products = products.filter(company__in=company)
+
+            """
+            Получение крайних значений для слайдеров
+            """
+            list_rate = []
+            list_amount = []
+            for product in products:
+                list_rate.append(product.interest_rate)
+                list_amount.append(product.insurance_amount)
+            min_rate_slider = min(list_rate)
+            max_rate_slider = max(list_rate)
+            min_amount_slider = min(list_amount)
+            max_amount_slider = max(list_amount)
+
+            """
+            Фильтр по сумме и проценту
+            """
+            min_amount = form.cleaned_data.get('min_insurance_amount')
+            max_amount = form.cleaned_data.get('max_insurance_amount')
+            if not (min_amount and max_amount) is None:
+                products = products.filter(insurance_amount__range=[min_amount, max_amount])
+
+            min_rate = form.cleaned_data.get('min_interest_rate')
+            max_rate = form.cleaned_data.get('max_interest_rate')
+            if not (min_rate and max_rate) is None:
+                products = products.filter(interest_rate__range=[min_rate, max_rate])
+
+            context = {
+                'products': products,
+                'category': category,
+                'form': form,
+                'min_amount': min_amount_slider,
+                'max_amount': max_amount_slider,
+                'min_rate': min_rate_slider,
+                'max_rate': max_rate_slider,
+            }
+            return render(request, 'main/list-insurance.html', context)
+
+        context = {
+            'products': products,
+            'category': category,
+            'form': form,
+        }
+        return render(request, 'main/list-insurance.html', context)
 
 
 # Создание клиентского запроса на предложение о страховке
