@@ -1,6 +1,7 @@
 @import url(style__list-tests.css);
 @import url(style__list-insurance.css);
 @import url(style__profile.css);
+@import url(multi-filter-range.css);
 
 :root {
     font-size: 16px;

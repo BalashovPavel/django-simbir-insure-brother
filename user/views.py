@@ -1,11 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.generic import DetailView
-
 from django.views.generic.base import View
 
 from main.models import Insurance, ClientRequest
