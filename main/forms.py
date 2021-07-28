@@ -1,8 +1,7 @@
 from django import forms
-from django.forms import Select, Textarea, NumberInput, TextInput, EmailInput
+from django.forms import TextInput, EmailInput
 
-from main.models import Insurance, ClientRequest
-
+from main.models import ClientRequest
 # Форма для создания клиентского запроса
 from user.models import CompanyProfile
 
@@ -20,15 +19,6 @@ class CreateClientRequestForm(forms.ModelForm):
         }
 
 
-#
-# class FilterInsuranceMainForm(forms.ModelForm):
-#     class Meta:
-#         model = Insurance
-#         fields = ('company', 'interest_rate', 'insurance_amount')
-#         widgets = {
-#             'company': M
-#         }
-
 class FilterInsuranceMainForm(forms.Form):
     company = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
@@ -44,4 +34,3 @@ class FilterInsuranceMainForm(forms.Form):
                                            required=False, label='')
     max_interest_rate = forms.DecimalField(min_value=0.00, max_digits=5, decimal_places=2,
                                            required=False, label="")
-

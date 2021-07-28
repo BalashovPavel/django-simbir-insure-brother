@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
 from django.views.generic import ListView
 from django.views.generic.base import View
 
@@ -26,20 +25,10 @@ class ListInsurance(View):
         if form.is_valid():
 
             """
-            Фильтр по компаниям
-            """
-            company = form.cleaned_data.get('company')
-            if company:
-                products = products.filter(company__in=company)
-
-            """
             Получение крайних значений для слайдеров
             """
-            list_rate = []
-            list_amount = []
-            for product in products:
-                list_rate.append(product.interest_rate)
-                list_amount.append(product.insurance_amount)
+            list_rate = products.values_list('interest_rate', flat=True)
+            list_amount = products.values_list('insurance_amount', flat=True)
             min_rate_slider = min(list_rate)
             max_rate_slider = max(list_rate)
             min_amount_slider = min(list_amount)
@@ -57,6 +46,13 @@ class ListInsurance(View):
             max_rate = form.cleaned_data.get('max_interest_rate')
             if not (min_rate and max_rate) is None:
                 products = products.filter(interest_rate__range=[min_rate, max_rate])
+
+            """
+            Фильтр по компаниям
+            """
+            companies = form.cleaned_data.get('company')
+            if companies:
+                products = products.filter(company__in=companies)
 
             context = {
                 'products': products,
