@@ -7,8 +7,10 @@ from django.views.generic.base import View
 from main.forms import CreateClientRequestForm, FilterInsuranceMainForm
 from main.models import Category, Insurance, ClientRequest
 
-
 # Список типов страхований
+from main.tasks import client_request_created
+
+
 class CategoryHome(ListView):
     model = Category
     context_object_name = "categories"
@@ -86,8 +88,9 @@ def create_client_request(request, slug, id):
             client_request.phone = form.cleaned_data.get('phone')
             client_request.email = form.cleaned_data.get('email')
             client_request.insurance_id = insurance.id
-            print(client_request.insurance_id)
+            # print(client_request.insurance_id)
             client_request.save()
+            client_request_created.delay(client_request.id)
             messages.success(request, 'Заявка отправлена.')
             return HttpResponseRedirect('.')
         else:

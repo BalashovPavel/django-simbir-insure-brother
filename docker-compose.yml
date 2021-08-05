@@ -1,14 +1,44 @@
 version: "3.9"
 
 services:
+
+  rabbit:
+    image: "rabbitmq:3.8.19-alpine-management"
+    restart: on-failure
+    container_name: rabbit
+    hostname: rabbit
+    env_file:
+      - ./.env.dev
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  worker:
+    build:
+      context: "."
+    restart: on-failure
+    command: celery -A insure_brother worker -l info
+    links:
+      - rabbit
+    depends_on:
+      - rabbit
+
+  flower:
+    build: ./
+    command: celery -A insure_brother flower
+    ports:
+      - "5555:5555"
+    depends_on:
+      - worker
+      - rabbit
+
   db:
     image: postgres
+    ports:
+      - "5432"
     volumes:
       - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=insure_brother_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - ./.env.dev
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000

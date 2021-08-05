@@ -80,10 +80,14 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
 
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'insure_brother_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        # 'NAME': 'insure_brother_db',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'postgres',
+        'NAME': os.environ.get("SQL_NAME", "insure_brother_db"),
+        'USER': os.environ.get("SQL_USER", "postgres"),
+        'PASSWORD': os.environ.get("SQL_PASSWORD", "postgres"),
+        # "HOST": os.environ.get("SQL_HOST", "db"),
+        "HOST": "localhost",
         'PORT': 5432,
     }
 }
@@ -130,3 +134,20 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+RABBITMQ_DEFAULT_USER = os.environ.get('RABBITMQ_DEFAULT_USER', 'guest')
+RABBITMQ_DEFAULT_PASS = os.environ.get('RABBITMQ_DEFAULT_PASS', 'guest')
+RABBITMQ_DEFAULT_VHOST = os.environ.get('RABBITMQ_DEFAULT_VHOST', '/')
+
+CELERY_BROKER_URL = 'amqp://@localhost'
+# CELERY_BROKER_URL = f'pyamqp://{RABBITMQ_DEFAULT_USER}:{RABBITMQ_DEFAULT_PASS}@rabbit:5672/{RABBITMQ_DEFAULT_VHOST}'
+
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.sendgrid.net')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'apikey')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'insure.brother@gmail.com')
