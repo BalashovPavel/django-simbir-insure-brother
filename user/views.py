@@ -7,6 +7,8 @@ from django.views.generic import DetailView
 from django.views.generic.base import View
 
 from main.models import Insurance, ClientRequest
+# from main.tasks import get_mongodb
+from main.tasks import get_mongodb
 from user.forms import SignUpForm, UserChangeForm, AccountChangeForm, AddInsuranceForm
 from user.models import CompanyProfile
 
@@ -109,6 +111,18 @@ class CompanyInsurance(View):
         return render(request, "user/profile__insurance.html", context)
 
 
+class CompanyInsuranceInfo(View):
+
+    def get(self, request, *args, **kwargs):
+        insurance = Insurance.objects.get(pk=self.kwargs['id'])
+
+        db = get_mongodb()
+        collection = db.insurance
+        docs = collection.find_one({'insurance_id': insurance.id})
+        docs = docs['number_views']
+        return render(request, "user/profile_service_info.html", {"insurance": insurance, "docs": docs})
+
+
 # Добавление страховой услуги
 def add_insurance(request):
     if request.method == 'POST':
@@ -121,6 +135,14 @@ def add_insurance(request):
             data.interest_rate = form.cleaned_data.get('interest_rate')
             data.insurance_amount = form.cleaned_data.get('insurance_amount')
             data.save()
+
+            db = get_mongodb()
+            collection = db.insurance
+            collection_element = {
+                'insurance_id': data.id,
+                'number_views': 0,
+            }
+            collection.insert_one(collection_element)
             return HttpResponseRedirect('./')
         else:
             return HttpResponseRedirect('./add')
@@ -134,6 +156,9 @@ def add_insurance(request):
 # Удаление страховой услуги
 def delete_insurance(request, id):
     insurance = Insurance.objects.get(id=id)
+    db = get_mongodb()
+    collection = db.insurance
+    collection.delete_one({"insurance_id": insurance.id})
     insurance.delete()
     return HttpResponseRedirect('..')
 

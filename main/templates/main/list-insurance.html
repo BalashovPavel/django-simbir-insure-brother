@@ -33,14 +33,12 @@
                             <div class="filters-price__slider" id="range-slider-amount"></div>
                             <div class="filters-price__inputs">
                                 <label class="filters-price__label">
-{#                                    <span class="filters-price__text">от</span>#}
                                     <input type="number" min="{{ min_amount }}" max="{{ max_amount }}"
                                            placeholder="{{ min_amount }}" class="filters-price__input"
                                            id="range-amount-0">
                                 </label>
 
                                 <label class="filters-price__label">
-{#                                    <span class="filters-price__text">до</span>#}
                                     <input type="number" min="{{ min_amount }}" max="{{ max_amount }}"
                                            placeholder="{{ max_amount }}" class="filters-price__input"
                                            id="range-amount-1">
@@ -105,6 +103,11 @@
                                         <button class="list-cart__button" type="submit">Оставить заявку</button>
                                     </a>
                                 </div>
+                                <div>
+                                    <a href="{% url 'insurance_info' product.category.slug product.id %}">
+                                        <button class="list-cart__button" type="submit">Открыть</button>
+                                    </a>
+                                </div>
                                 <div><a class="js-open-modal" data-modal="{{ product.id }}">Подробнее</a></div>
                                 <div class="modal" data-modal="{{ product.id }}">
                                     <!--   Svg иконка для закрытия окна  -->
@@ -117,6 +120,11 @@
                                     <div>
                                         <a href="{% url 'create_client_request' product.category.slug product.id %}">
                                             <button class="list-cart__button" type="submit">Оставить заявку</button>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'insurance_info' product.category.slug product.id %}">
+                                            <button class="list-cart__button" type="submit">Открыть</button>
                                         </a>
                                     </div>
                                 </div>

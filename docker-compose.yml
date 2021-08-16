@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   rabbit:
-    image: "rabbitmq:3.8.19-alpine-management"
+    image: "rabbitmq:3.8-management-alpine"
     restart: on-failure
     container_name: rabbit
     hostname: rabbit
@@ -39,6 +39,11 @@ services:
       - ./data/db:/var/lib/postgresql/data
     env_file:
       - ./.env.dev
+    environment:
+#      SQL_NAME: postgres
+#      SQL_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -50,6 +55,33 @@ services:
       - ./.env.dev
     depends_on:
       - db
+
+  elasticsearch:
+    image: "elasticsearch:7.14.0"
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: username_brother
+      MONGO_INITDB_ROOT_PASSWORD: password_brother
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: username_brother
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password_brother
+      ME_CONFIG_MONGODB_URL: mongodb://username_brother:password_brother@mongo:27017/
+
 
 volumes:
   db:

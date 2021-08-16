@@ -4,74 +4,71 @@
 {% block header %} {% include 'main/header.html' %} {% endblock header %}
 
 {% block body %}
+
     <div class="container">
         <div class="page">
             <div class="page__title">
-                Личный кабинет / Услуги
+                {{ category.category_name }}
             </div>
-
-            <div class="page__list-tests profile-company">
-                <ul class="page__prof-nav">
-                    <li><a href="{% url 'company_info' %}">Информация о компании</a></li>
-                    <li><a href="{% url 'company_insurance' %}">Страховые услуги</a></li>
-                    <li><a href="{% url 'company_clients_requests' %}">Заявки клиентов</a></li>
-                </ul>
-                <div class="page__info">
-                    <ul class="list-tests">
-                        {% for product in insurances %}
-                            <li class="list-tests__item">
-                                <div class="list-cart">
-                                    <div class="lis-cart__title">{{ product.category.category_name }}/{{ product.company.company_name }}</div>
-                                    <div class="list-cart__item">
-                                        <div class="list-cart__item__left">Процентная ставка:</div>
-                                        <div class="list-cart__item__right">{{ product.interest_rate }}%</div>
-                                    </div>
-                                    <div class="list-cart__item">
-                                        <div class="list-cart__item__left">Страховая сумма:</div>
-                                        <div class="list-cart__item__right">{{ product.insurance_amount }} руб.</div>
-                                    </div>
+            <div class="page__subtitle">
+                Поиск по запросу "{{ search }}"
+            </div>
+            <div class="page__subtitle">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="page__list-tests">
+                {% if not products %}
+                    <div style="width: 90%">По вашему ничего не найдено</div>
+                {% endif %}
+                <ul class="list-tests">
+                    {% for product in products %}
+                        <li class="list-tests__item">
+                            <div class="list-cart">
+                                <div class="lis-cart__title">{{ product.category.category_name }}/{{ product.company.company_name }}</div>
+                                <div class="list-cart__item">
+                                    <div class="list-cart__item__left">Процентная ставка:</div>
+                                    <div class="list-cart__item__right">{{ product.interest_rate }}%</div>
+                                </div>
+                                <div class="list-cart__item">
+                                    <div class="list-cart__item__left">Страховая сумма:</div>
+                                    <div class="list-cart__item__right">{{ product.insurance_amount }} руб.</div>
+                                </div>
+                                <div>
+                                    <a href="{% url 'create_client_request' product.category.slug product.id %}">
+                                        <button class="list-cart__button" type="submit">Оставить заявку</button>
+                                    </a>
+                                </div>
+                                <div><a class="js-open-modal" data-modal="{{ product.id }}">Подробнее</a></div>
+                                <div class="modal" data-modal="{{ product.id }}">
+                                    <!--   Svg иконка для закрытия окна  -->
+                                    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 24 24">
+                                        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"></path>
+                                    </svg>
+                                    <p class="modal__title">Дополнительная информация</p>
+                                    <div>{{ product.description }}</div>
                                     <div>
-                                        <a href="{% url 'company_insurance_info' product.id %}">
-                                            <button class="list-cart__button" type="submit">Открыть</button>
+                                        <a href="{% url 'create_client_request' product.category.slug product.id %}">
+                                            <button class="list-cart__button" type="submit">Оставить заявку</button>
                                         </a>
-                                    </div>
-                                    <div>
-                                        <a href="{% url 'insurance-delete' product.id %}">
-                                            <button class="list-cart__button" type="submit">Удалить</button>
-                                        </a>
-                                    </div>
-                                    <div><a class="js-open-modal" data-modal="{{ product.id }}">Подробнее</a></div>
-                                    <div class="modal" data-modal="{{ product.id }}">
-                                        <!--   Svg иконка для закрытия окна  -->
-                                        <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg"
-                                             viewBox="0 0 24 24">
-                                            <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"></path>
-                                        </svg>
-                                        <p class="modal__title">Дополнительная информация</p>
-                                        <div>{{ product.description }}</div>
-                                        <div>
-                                            <a href="{% url 'insurance-delete' product.id %}">
-                                                <button class="list-cart__button" type="submit">Удалить</button>
-                                            </a>
-                                            <a href="{% url 'insurance-change' product.id %}">
-                                                <button class="list-cart__button" type="submit">Изменить</button>
-                                            </a>
-                                        </div>
                                     </div>
                                 </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div>
-                        <a href="{% url 'company_insurance-add' %}">
-                            <button class="list-cart__button" type="submit">Добавить страховку</button>
-                        </a>
-                    </div>
-                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
                 <div class="overlay js-overlay-modal"></div>
             </div>
         </div>
     </div>
+
+
 {% endblock body %}
 
 {% block footer %}
@@ -158,3 +155,4 @@
         }); // end ready
     </script>
 {% endblock footer %}
+

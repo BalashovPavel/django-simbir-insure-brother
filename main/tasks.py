@@ -1,7 +1,11 @@
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from pymongo import MongoClient
 
 from insure_brother import settings
 from insure_brother.celery import app
+from insure_brother.settings import MONGO_INITDB_DATABASE, \
+    MONGO_INITDB_USERNAME, MONGO_INITDB_PASSWORD
 from main.models import ClientRequest, Insurance
 
 
@@ -13,17 +17,37 @@ def client_request_created(client_id):
     client_request = ClientRequest.objects.get(pk=client_id)
     insurance = Insurance.objects.get(pk=client_request.insurance_id)
     subject = 'Заявка пользователя на страхование "{}".'.format(insurance.category.category_name)
-    message = '{}, вам пришла заявка на получение услуги страхования "{}".\n\n' \
-              'Описание услуги срахования:\nКомпания: {}\nТип страхования: {}\n' \
-              'Краткое описание: {}\nПроцентная ставка: {}%\nСтраховая сумма: {}руб.\n\n' \
-              'Информация о пользователе:\nФИО: {} {} {}\nТелефон: {}\nEmail: {}.'.format(
-                insurance.company.company_name, insurance.category.category_name,
-                insurance.company.company_name, insurance.category.category_name,
-                insurance.description, insurance.interest_rate, insurance.insurance_amount,
-                client_request.last_name, client_request.first_name, client_request.patronymic,
-                client_request.phone, client_request.email
-              )
+    context = {'company_name': insurance.company.company_name,
+               'category_name': insurance.category.category_name,
+               'description': insurance.description,
+               'interest_rate': insurance.interest_rate,
+               'insurance_amount': insurance.insurance_amount,
+               'last_name': client_request.last_name,
+               'first_name': client_request.first_name,
+               'patronymic': client_request.patronymic,
+               'phone': client_request.phone,
+               'email': client_request.email}
+    html_message = render_to_string(template_name="mails/client_request_created/body.html", context=context)
+    txt_message = render_to_string(template_name="mails/client_request_created/body.txt", context=context)
 
-    mail_sent = EmailMessage(subject, message, settings.DEFAULT_FROM_EMAIL, [insurance.company.email, ])
-
+    mail_sent = EmailMultiAlternatives(subject, txt_message, settings.DEFAULT_FROM_EMAIL, [insurance.company.email, ])
+    mail_sent.attach_alternative(html_message, "text/html")
     return mail_sent.send(fail_silently=False)
+
+
+@app.task
+def get_mongodb():
+    database = MONGO_INITDB_DATABASE
+    username = MONGO_INITDB_USERNAME
+    password = MONGO_INITDB_PASSWORD
+    client = MongoClient(
+        host='mongo',
+        port=27017,
+        serverSelectionTimeoutMS=3000,
+        username=username,
+        password=password
+    )
+    # client = MongoClient('mongodb://username_brother:password_brother@mongo')
+    db = client[database]
+    print('success')
+    return db
