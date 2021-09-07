@@ -1,14 +1,14 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 
 from user.views import CompanyInfo, CompanyInsurance, add_insurance, delete_insurance, change_insurance, change_account, \
-    change_password, CompanyClientRequest, DetailClientRequest, delete_clients_requests
+    change_password, CompanyClientRequest, DetailClientRequest, delete_clients_requests, CompanyInsuranceInfo
 
 urlpatterns = [
     path('', CompanyInfo.as_view(), name='company_info'),
     path('change-account/', change_account, name='change-account'),
     path('change-password/', change_password, name='change-password'),
     path('insurances/', CompanyInsurance.as_view(), name='company_insurance'),
+    path('insurances/<int:id>', CompanyInsuranceInfo.as_view(), name='company_insurance_info'),
     path('insurances/add', add_insurance, name='company_insurance-add'),
     path('insurances/delete/<int:id>', delete_insurance, name='insurance-delete'),
     path('insurances/change/<int:id>', change_insurance, name='insurance-change'),

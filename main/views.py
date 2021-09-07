@@ -3,9 +3,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.views.generic.base import View
+from elasticsearch_dsl.query import MultiMatch
 
+from main.documents import InsuranceDocument
 from main.forms import CreateClientRequestForm, FilterInsuranceMainForm
 from main.models import Category, Insurance, ClientRequest
+from main.tasks import client_request_created, get_mongodb
 
 
 # Список типов страхований
@@ -73,6 +76,31 @@ class ListInsurance(View):
         return render(request, 'main/list-insurance.html', context)
 
 
+# Поиск через elasticsearch
+class ListSearch(View):
+
+    def get(self, request, *args, **kwargs):
+        search = self.request.GET.get("search")
+        # search_query = MultiMatch(query=search, fields=["company.company_name", "category.category_name", "description"])
+        search_query = MultiMatch(query=search,
+                                  fields=["description"])
+        search_result = InsuranceDocument.search().query(search_query)
+        products = search_result.to_queryset()
+        return render(request, "main/search_list.html", context={'products': products, 'search': search})
+
+
+class InsuranceInfo(View):
+
+    def get(self, request, *args, **kwargs):
+        insurance = Insurance.objects.get(pk=self.kwargs['id'])
+        db = get_mongodb()
+        collection = db.insurance
+        query = {'insurance_id': insurance.id}
+        new_values = {'$inc': {'number_views': 1}}
+        collection.update_one(query, new_values)
+        return render(request, "main/service_info.html", {"insurance": insurance})
+
+
 # Создание клиентского запроса на предложение о страховке
 def create_client_request(request, slug, id):
     insurance = Insurance.objects.get(id=id)
@@ -86,8 +114,8 @@ def create_client_request(request, slug, id):
             client_request.phone = form.cleaned_data.get('phone')
             client_request.email = form.cleaned_data.get('email')
             client_request.insurance_id = insurance.id
-            print(client_request.insurance_id)
             client_request.save()
+            client_request_created.delay(client_request.id)
             messages.success(request, 'Заявка отправлена.')
             return HttpResponseRedirect('.')
         else:

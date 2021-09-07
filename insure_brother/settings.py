@@ -25,7 +25,6 @@ SECRET_KEY = 'django-insecure-d-!x&)z*g_y20pwkm5*hp%7oqs)+my!ryd4afpd*ny4$=k!w2p
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default="localhost 127.0.0.1 [::1]").split(" ")
 
 # Application definition
 
@@ -38,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_elasticsearch_dsl',
 ]
 
 MIDDLEWARE = [
@@ -76,13 +76,10 @@ WSGI_APPLICATION = 'insure_brother.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'insure_brother_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': os.environ.get("SQL_NAME", "insure_brother_db"),
+        'USER': os.environ.get("SQL_USER", "postgres"),
+        'PASSWORD': os.environ.get("SQL_PASSWORD", "postgres"),
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         'PORT': 5432,
     }
@@ -130,3 +127,38 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+RABBITMQ_DEFAULT_USER = os.environ.get('RABBITMQ_DEFAULT_USER', 'guest')
+RABBITMQ_DEFAULT_PASS = os.environ.get('RABBITMQ_DEFAULT_PASS', 'guest')
+RABBITMQ_DEFAULT_VHOST = os.environ.get('RABBITMQ_DEFAULT_VHOST', '/')
+
+
+CELERY_BROKER_URL = f'pyamqp://{RABBITMQ_DEFAULT_USER}:{RABBITMQ_DEFAULT_PASS}@rabbit:5672/{RABBITMQ_DEFAULT_VHOST}'
+# CELERY_BROKER_URL = f'pyamqp://{RABBITMQ_DEFAULT_USER}:{RABBITMQ_DEFAULT_PASS}@localhost:5672'
+
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.sendgrid.net')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'apikey')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+
+
+# ELASTICSEARCH_DSL = {
+#     'default': {
+#         'hosts': 'localhost:9200'
+#     },
+# }
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'elasticsearch:9200'
+    },
+}
+
+MONGO_INITDB_DATABASE = "insurance_mongodb"
+MONGO_INITDB_USERNAME = "username_brother"
+MONGO_INITDB_PASSWORD = "password_brother"

@@ -2,10 +2,10 @@ from django import forms
 from django.forms import TextInput, EmailInput
 
 from main.models import ClientRequest
-# Форма для создания клиентского запроса
 from user.models import CompanyProfile
 
 
+# Форма для создания клиентского запроса
 class CreateClientRequestForm(forms.ModelForm):
     class Meta:
         model = ClientRequest

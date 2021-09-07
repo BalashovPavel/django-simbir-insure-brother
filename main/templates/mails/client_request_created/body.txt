@@ -1,0 +1,18 @@
+{{ company_name }}, вам пришла заявка на получение услуги страхования "{{ category_name }}".
+
+
+Описание услуги срахования:
+
+  Компания:  {{ company_name }}
+  Тип страхования:  {{ category_name }}
+  Краткое описание:  {{ description }}
+  Процентная ставка:  {{ interest_rate }}%
+  Страховая сумма:  {{ insurance_amount }} руб.
+
+Информация о пользователе:
+
+  ФИО:  {{ last_name }} {{ first_name }} {{ patronymic }}
+  Телефон:  {{ phone }}
+  Email:  {{ email }}
+
+{{ company_name }} {{ category_name }}

@@ -23,11 +23,12 @@ class Insurance(models.Model):
     description = models.CharField(max_length=150, verbose_name='Краткое описание')
     interest_rate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='Процентная ставка')
     insurance_amount = models.DecimalField(max_digits=8, decimal_places=0, verbose_name='Страховая сумма')
-    create_at = models.DateTimeField(auto_now_add=True)  # Создано в
-    update_at = models.DateTimeField(auto_now=True)  # Обнавлено в
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.category.category_name + "/" + self.company.company_name
+        insurance_title = self.category.category_name + "/" + self.company.company_name
+        return insurance_title
 
     class Meta:
         verbose_name = 'Страховое предложение'

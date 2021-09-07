@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .email p {
+            text-decoration: underline;
+            margin: 20px 0;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        .email .email_title{
+            text-decoration: none;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .email table{
+            border-collapse: collapse;
+        }
+        .email td {
+            padding: 5px; /* Поля вокруг содержимого таблицы */
+            border: 1px solid #2b2b2b; /* Параметры рамки */
+            font-size: 14px;
+        }
+
+        .email .td_title{
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="email">
+        <p class="email_title">
+            "{{ company_name }}", вам пришла заявка на получение услуги страхования "{{ category_name }}". html
+        </p>
+
+        <p>
+            Описание услуги срахования:
+        </p>
+
+        <table>
+            <tbody>
+            <tr>
+                <td class="td_title">Компания:</td>
+                <td>{{ company_name }}</td>
+            </tr>
+            <tr>
+                <td class="td_title">Тип страхования:</td>
+                <td>{{ category_name }}</td>
+            </tr>
+            <tr>
+                <td class="td_title">Краткое описание:</td>
+                <td>{{ description }}</td>
+            </tr>
+            <tr>
+                <td class="td_title">Процентная ставка:</td>
+                <td>{{ interest_rate }}</td>
+            </tr>
+            <tr>
+                <td class="td_title">Страховая сумма:</td>
+                <td>{{ insurance_amount }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p>
+            Информация о пользователе:
+        </p>
+
+        <table>
+            <tbody>
+            <tr>
+                <td class="td_title">ФИО:</td>
+                <td>{{ last_name }} {{ first_name }} {{ patronymic }}</td>
+            </tr>
+            <tr>
+                <td class="td_title">Телефон:</td>
+                <td>{{ phone }}</td>
+            </tr>
+            <tr>
+                <td class="td_title">Email:</td>
+                <td>{{ email }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
+
