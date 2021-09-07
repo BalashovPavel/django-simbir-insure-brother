@@ -1,0 +1,25 @@
+<header>
+    <div class="header-elements">
+        <div class="logo"><a href="/">insure brother</a></div>
+        <div class="nav">
+            <div class="nav__element">
+                <form action="{% url 'search_results' %}" method="get">
+                    <label>
+                        <input name="search" placeholder="Искать здесь..." type="search">
+                    </label>
+                    <button type="submit">Поиск</button>
+                </form>
+            </div>
+            <div class="nav__element"><a href="{% url 'home' %}">Страхование</a></div>
+            {% if user.id is not None %}
+                <div class="nav__element"><a href="{% url 'company_info' %}"><i class="fa fa-user-o"
+                                                                                aria-hidden="true"></i>{{ user.username }}
+                </a></div>
+                <div class="nav__element"><a href="{% url 'logout' %}">Выйти</a></div>
+            {% else %}
+                <div class="nav__element"><a href="{% url 'login' %}">Войти</a></div>
+                <div class="nav__element"><a href="{% url 'signup' %}">Регистрация</a></div>
+            {% endif %}
+        </div>
+    </div>
+</header>

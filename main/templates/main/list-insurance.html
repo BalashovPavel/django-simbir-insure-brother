@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% block title %}Застрахуй Братуху{% endblock title %}
+{% block header %} {% include 'main/header.html' %} {% endblock header %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="page">
+            <div class="page__title">
+                {{ category.category_name }}
+            </div>
+            <div class="page__subtitle">
+                Выберите одно из предложений
+            </div>
+            <div class="page__subtitle">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="page__list-tests">
+                <div class="page__filter">
+                    <div class="page__subtitle">
+                        Фильтры
+                    </div>
+                    <div>
+                        <div class="filters-price">
+                            <p class="filters-price__title">Страховая сумма:</p>
+                            <div class="filters-price__slider" id="range-slider-amount"></div>
+                            <div class="filters-price__inputs">
+                                <label class="filters-price__label">
+                                    <input type="number" min="{{ min_amount }}" max="{{ max_amount }}"
+                                           placeholder="{{ min_amount }}" class="filters-price__input"
+                                           id="range-amount-0">
+                                </label>
+
+                                <label class="filters-price__label">
+                                    <input type="number" min="{{ min_amount }}" max="{{ max_amount }}"
+                                           placeholder="{{ max_amount }}" class="filters-price__input"
+                                           id="range-amount-1">
+                                </label>
+                            </div>
+                        </div>
+                        <input id="min_amount" type="hidden" value="{{ min_amount }}" aria-hidden="true">
+                        <input id="max_amount" type="hidden" value="{{ max_amount }}" aria-hidden="true">
+                    </div>
+                    <div>
+                        <div class="filters-price">
+                            <p class="filters-price__title">Процентная ставка:</p>
+                            <div class="filters-price__slider" id="range-slider-rate"></div>
+                            <div class="filters-price__inputs">
+                                <label class="filters-price__label">
+                                    <span class="filters-price__text">от</span>
+                                    <input type="number" min="{{ min_rate }}" max="{{ max_rate }}"
+                                           placeholder="{{ min_rate }}" class="filters-price__input"
+                                           id="range-rate-0">
+                                </label>
+
+                                <label class="filters-price__label">
+                                    <span class="filters-price__text">до</span>
+                                    <input type="number" min="{{ min_rate }}" max="{{ max_rate }}"
+                                           placeholder="{{ max_rate }}" class="filters-price__input"
+                                           id="range-rate-1">
+                                </label>
+                            </div>
+                        </div>
+                        <input id="min_rate" type="hidden" value="{{ min_rate }}" aria-hidden="true">
+                        <input id="max_rate" type="hidden" value="{{ max_rate }}" aria-hidden="true">
+                    </div>
+                    <div>
+                        <form method="get">
+                            <div class="filter-none">
+                                {% for field in form %}
+                                    {{ field.errors }}
+                                    <p class="{{ field.id_for_label }}">
+                                        {{ field.label_tag }} {{ field }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                            <button type="submit" class="list-cart__button">Подтвердить</button>
+                        </form>
+                    </div>
+                </div>
+                <ul class="list-tests">
+                    {% for product in products %}
+                        <li class="list-tests__item">
+                            <div class="list-cart">
+                                <div class="lis-cart__title">{{ product.company.company_name }}</div>
+                                <div class="list-cart__item">
+                                    <div class="list-cart__item__left">Процентная ставка:</div>
+                                    <div class="list-cart__item__right">{{ product.interest_rate }}%</div>
+                                </div>
+                                <div class="list-cart__item">
+                                    <div class="list-cart__item__left">Страховая сумма:</div>
+                                    <div class="list-cart__item__right">{{ product.insurance_amount }} руб.</div>
+                                </div>
+                                <div>
+                                    <a href="{% url 'create_client_request' product.category.slug product.id %}">
+                                        <button class="list-cart__button" type="submit">Оставить заявку</button>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="{% url 'insurance_info' product.category.slug product.id %}">
+                                        <button class="list-cart__button" type="submit">Открыть</button>
+                                    </a>
+                                </div>
+                                <div><a class="js-open-modal" data-modal="{{ product.id }}">Подробнее</a></div>
+                                <div class="modal" data-modal="{{ product.id }}">
+                                    <!--   Svg иконка для закрытия окна  -->
+                                    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 24 24">
+                                        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"></path>
+                                    </svg>
+                                    <p class="modal__title">Дополнительная информация</p>
+                                    <div>{{ product.description }}</div>
+                                    <div>
+                                        <a href="{% url 'create_client_request' product.category.slug product.id %}">
+                                            <button class="list-cart__button" type="submit">Оставить заявку</button>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'insurance_info' product.category.slug product.id %}">
+                                            <button class="list-cart__button" type="submit">Открыть</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="overlay js-overlay-modal"></div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock body %}
+
+{% block footer %}
+    <script>
+        !function (e) {
+            "function" != typeof e.matches && (e.matches = e.msMatchesSelector || e.mozMatchesSelector || e.webkitMatchesSelector || function (e) {
+                for (var t = this, o = (t.document || t.ownerDocument).querySelectorAll(e), n = 0; o[n] && o[n] !== t;) ++n;
+                return Boolean(o[n])
+            }), "function" != typeof e.closest && (e.closest = function (e) {
+                for (var t = this; t && 1 === t.nodeType;) {
+                    if (t.matches(e)) return t;
+                    t = t.parentNode
+                }
+                return null
+            })
+        }(window.Element.prototype);
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            /* Записываем в переменные массив элементов-кнопок и подложку.
+               Подложке зададим id, чтобы не влиять на другие элементы с классом overlay*/
+            var modalButtons = document.querySelectorAll('.js-open-modal'),
+                overlay = document.querySelector('.js-overlay-modal'),
+                closeButtons = document.querySelectorAll('.js-modal-close');
+
+
+            /* Перебираем массив кнопок */
+            modalButtons.forEach(function (item) {
+
+                /* Назначаем каждой кнопке обработчик клика */
+                item.addEventListener('click', function (e) {
+
+                    /* Предотвращаем стандартное действие элемента. Так как кнопку разные
+                       люди могут сделать по-разному. Кто-то сделает ссылку, кто-то кнопку.
+                       Нужно подстраховаться. */
+                    e.preventDefault();
+
+                    /* При каждом клике на кнопку мы будем забирать содержимое атрибута data-modal
+                       и будем искать модальное окно с таким же атрибутом. */
+                    var modalId = this.getAttribute('data-modal'),
+                        modalElem = document.querySelector('.modal[data-modal="' + modalId + '"]');
+
+
+                    /* После того как нашли нужное модальное окно, добавим классы
+                       подложке и окну чтобы показать их. */
+                    modalElem.classList.add('active');
+                    overlay.classList.add('active');
+                }); // end click
+
+            }); // end foreach
+
+
+            closeButtons.forEach(function (item) {
+
+                item.addEventListener('click', function (e) {
+                    var parentModal = this.closest('.modal');
+
+                    parentModal.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+
+            }); // end foreach
+
+
+            document.body.addEventListener('keyup', function (e) {
+                var key = e.keyCode;
+
+                if (key == 27) {
+
+                    document.querySelector('.modal.active').classList.remove('active');
+                    document.querySelector('.overlay').classList.remove('active');
+                }
+                ;
+            }, false);
+
+
+            overlay.addEventListener('click', function () {
+                document.querySelector('.modal.active').classList.remove('active');
+                this.classList.remove('active');
+            });
+
+
+        }); // end ready
+    </script>
+{% endblock footer %}
+

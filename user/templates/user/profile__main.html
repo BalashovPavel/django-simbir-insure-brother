@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Застрахуй Братуху{% endblock title %}
+{% block header %} {% include 'main/header.html' %} {% endblock header %}
+
+{% block body %}
+    <div class="container">
+        <div class="page">
+            <div class="page__title">
+                Личный кабинет / Информация
+            </div>
+
+            <div class="page__list-tests profile-company">
+                <ul class="page__prof-nav">
+                    <li><a href="{% url 'company_info' %}">Информация о компании</a></li>
+                    <li><a href="{% url 'company_insurance' %}">Страховые услуги</a></li>
+                    <li><a href="{% url 'company_clients_requests' %}">Заявки клиентов</a></li>
+                </ul>
+                <div class="page__info">
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Ваш логин:</div>
+                        <div class="page__info__line-text">{{ company.user.username }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Название компании:</div>
+                        <div class="page__info__line-text">{{ company.company_name }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Юридический адрес:</div>
+                        <div class="page__info__line-text">{{ company.address }}</div>
+                    </div>
+                    <div class="page__info__line">
+                        <div class="page__info__line-title">Email:</div>
+                        <div class="page__info__line-text">{{ company.email }}</div>
+                    </div>
+                    <div>
+                        <a href="{% url 'change-account' %}"><button class="list-cart__button" type="submit">Изменить данные</button></a>
+                        <a href="{% url 'change-password' %}"><button class="list-cart__button" type="submit">Изменить пароль</button></a>
+                    </div>
+                </div>
+                <div class="overlay js-overlay-modal"></div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

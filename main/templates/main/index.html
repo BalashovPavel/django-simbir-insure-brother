@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Застрахуй Братуху{% endblock title %}
+{% block header %} {% include 'main/header.html' %} {% endblock header %}
+
+{% block body %}
+
+<div class="container">
+        <div class="page">
+            <div class="page__title">
+                Страхование
+            </div>
+            <div class="page__subtitle">
+                Выберите тип страхования
+            </div>
+            <div class="page__list-tests">
+                <ul class="list-tests">
+                    {% for category in categories %}
+                    <li class="list-tests__item">
+                        <div class="list-tests__item__theme">
+                            <a href="{% url 'insurance' category.slug %}">{{ category.category_name }}</a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
+

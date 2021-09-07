@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Застрахуй Братуху{% endblock title %}
+{% block header %} {% include 'main/header.html' %} {% endblock header %}
+
+{% block body %}
+    <div class="container">
+        <div class="page">
+            <div class="page__title">
+                Личный кабинет / Заявки
+            </div>
+            <div class="page__subtitle">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="page__list-tests profile-company">
+                <ul class="page__prof-nav">
+                    <li><a href="{% url 'company_info' %}">Информация о компании</a></li>
+                    <li><a href="{% url 'company_insurance' %}">Страховые услуги</a></li>
+                    <li><a href="{% url 'company_clients_requests' %}">Заявки клиентов</a></li>
+                </ul>
+                <div class="page__info">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Страхование</th>
+                            <th>ФИО</th>
+                            <th>Телефон</th>
+                            <th>Email</th>
+                            <th>Дата</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for client_request in client_requests %}
+                            <tr>
+                                <td>{{ client_request.insurance.category }}</td>
+                                <td>{{ client_request.last_name }} {{ client_request.first_name }} {{ client_request.patronymic }}</td>
+                                <td>{{ client_request.phone }}</td>
+                                <td>{{ client_request.email }}</td>
+                                <td>{{ client_request.create_at | date:"d-m-Y / H:i" }}</td>
+                                <td><a href="{% url "company_clients_requests__detail" client_request.id %}">Детали</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="overlay js-overlay-modal"></div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
